@@ -29,19 +29,18 @@ act( climbUp(B), % Any box needed
 ).
 
 %  Action: LightOn
-act( turnOn(), % There is only one lightswitch per room, so which is implicit
-[shakey(S),switch(L) ,box(B), at(S, X), at(B, X), on(S, box), lights(X, off)], %
-[lights(X, off)],
-[lights(X, on)]
+act( turnOn(L), % There is only one lightswitch per room, so which is implicit
+[shakey(S), switch(L) ,box(B), at(S, L), at(B, L), on(S, box), lights(L, off)], %
+[lights(L, off)],
+[lights(L, on)]
 ).
 
 %  Action: LightOff
-act( turnOff(), % There is only one lightswitch per room, so which is implicit
-[shakey(S), box(B), at(S, X), at(B, X), on(S, box), lights(X, on)], %
-[lights(X, on)],
-[lights(X, off)]
+act( turnOff(L), % There is only one lightswitch per room, so which is implicit
+[shakey(S), switch(L), box(B), at(S, L), at(B, L), on(S, box), lights(L, on)], %
+[lights(L, on)],
+[lights(L, off)]
 ).
-
 
 goal_state([
 lights(light1, off),
@@ -62,7 +61,6 @@ binding(room1, corridor),
 binding(room2, corridor),
 binding(room3, corridor),
 binding(room4, corridor),
-binding(room4, corridor),
 binding(corridor, room1),
 binding(corridor, room2),
 binding(corridor, room3),
@@ -78,6 +76,12 @@ binding(light4, room4),
 binding(light3, room3),
 binding(light2, room2),
 binding(light1, room1),
+
+% Define light
+switch(light4),
+switch(light3),
+switch(light2),
+switch(light1),
 
 % Set light states - Doing reverse according to image
 lights(light4, off),
