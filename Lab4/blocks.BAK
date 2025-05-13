@@ -7,56 +7,41 @@
 %  ?- plan.
 
 
-% actions
-act( pick_from_table(X),                             % action name
-     [block(X), handempty,  clear(X), on(X,table)],  % preconditions
-     [handempty, on(X, table)],                      % delete
-     [holding(X)]                                    % add
-     ).
+:-use_module(library(clpfd)).
+:-style_check(-singleton).
+
+% Constraints
+table(0). % Table has to be a number due to library
+block(X) :- X in 2 .. 4 \/ 6.
+pyramid(X) :- X in 1 \/ 5.
+orange(X) :-X in 1 \/ 4.
+green(X) :- X in 2 \/ 5.
+blue(X) :- X in 3 \/ 6.
 
 
-act( pickup_from_block(X,Y),
-     [block(X), handempty, clear(X), on(X,Y), block(Y), diff(X,Y)],  % (1)
-     [handempty, on(X, Y)],
-     [holding(X), clear(Y)]
-     ).
-% (1)  diff(X,Y) is needed to prevent cases like pickup_from_block(a,a)
+% Actions
+act( moveObject(X, A, B),                             % action name
+     [available(X), available(B)],  % preconditions
+     [on(X, A), available(B)],                      % delete
+     [on(X,B), available(A)]                                    % add
+     ):-
+     block(B),  % B is a Block
+     A #\=B.  % A and B are not the same spot
+
+act(  placeObject(X,From),
+     [available(X), on(X,From)],
+     [on(X,From)],
+     [on(X,0), available(From)]
+     ):-
+     From #\= 0.
 
 
-act( putdown_on_table(X),
-     [block(X), holding(X)],
-     [holding(X)],
-     [handempty, on(X,table)]
-     ).
+goal_state([on(X,Y),on(Y,Z)]):-
+green(Y),
+blue(Z).
 
 
-act(  putdown_on_block(X,Y),
-     [block(X), holding(X), block(Y), clear(Y), diff(X,Y)],
-     [holding(X), clear(Y)],
-     [handempty, on(X,Y)]
-     ).
 
+initial_state([on(1,0),on(2,0),on(3,4),on(4,0),on(5,6),on(6,0), available(1),available(2),available(3),available(5)]).
 
-goal_state( [on(c,b),on(a,c) ]).
-
-initial_state(
-     [      clear(b),
-            clear(c),
-            on(c,a),
-            on(a,table),
-            on(b,table),
-            handempty,
-            block(a),
-            block(b),
-            block(c),
-            diff(a,b),
-            diff(a,c),
-            diff(b,a),
-            diff(b,c),
-            diff(c,a),
-            diff(c,b),
-            diff(a,table),
-            diff(b,table),
-            diff(c,table)
-     ]).
-     
+no_forbidden_states.
