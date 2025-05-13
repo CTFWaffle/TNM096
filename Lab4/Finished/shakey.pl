@@ -30,14 +30,14 @@ act( climbUp(B), % Any box needed
 
 %  Action: LightOn
 act( turnOn(), % There is only one lightswitch per room, so which is implicit
-[shakey(S), box(B), at(S, X), at(B, X), on(S, B), lights(X, off)], %
+[shakey(S),switch(L) ,box(B), at(S, X), at(B, X), on(S, box), lights(X, off)], %
 [lights(X, off)],
 [lights(X, on)]
 ).
 
 %  Action: LightOff
 act( turnOff(), % There is only one lightswitch per room, so which is implicit
-[shakey(S), box(B), at(S, X), at(B, X), on(S, B), lights(X, on)], %
+[shakey(S), box(B), at(S, X), at(B, X), on(S, box), lights(X, on)], %
 [lights(X, on)],
 [lights(X, off)]
 ).
